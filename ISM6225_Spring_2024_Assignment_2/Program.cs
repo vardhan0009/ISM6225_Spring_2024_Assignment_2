@@ -99,8 +99,25 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                if (nums.Length == 0) return 0;
+
+                // Here we needto Initialize the second pointer
+                int j = 1;
+
+                // Iterate through the array starting from the first element
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    // If the current element is not equal to the previous element,
+                    // It means it's a unique element and should be moved to the front part of the array.
+                    if (nums[i] != nums[i - 1])
+                    {
+                        nums[j] = nums[i];
+                        j++;
+                    }
+                }
+
+                // And The value of j indicates the number of unique elements
+                return j;
             }
             catch (Exception)
             {
@@ -130,18 +147,45 @@ namespace ISM6225_Spring_2024_Assignment_2
         -231 <= nums[i] <= 231 - 1
         */
 
+
+
         public static IList<int> MoveZeroes(int[] nums)
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return new List<int>();
+                // Pointer to keep track of the index of the last non-zero element found
+                int lastNonZeroFoundAt = 0;
+
+                // Iterate through the array
+                for (int cur = 0; cur < nums.Length; cur++)
+                {
+                    // If the current element is not zero, swap it with the element at lastNonZeroFoundAt
+                    if (nums[cur] != 0)
+                    {
+                        // Swap only if current is greater than lastNonZeroFoundAt to avoid unnecessary swaps
+                        if (cur > lastNonZeroFoundAt)
+                        {
+                            int temp = nums[cur];
+                            nums[cur] = nums[lastNonZeroFoundAt];
+                            nums[lastNonZeroFoundAt] = temp;
+                        }
+
+                        // Move the pointer forward
+                        lastNonZeroFoundAt++;
+                    }
+                }
+
+                // Since the question expects a return type but the operation is in-place,
+                // the following return statement is just to comply with the expected method signature.
+                // In practice, you would modify the method signature to return void.
+                return new List<int>(nums); // This is not required if the method signature is void
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
 
         /*
 
@@ -181,12 +225,48 @@ namespace ISM6225_Spring_2024_Assignment_2
 
         */
 
+
         public static IList<IList<int>> ThreeSum(int[] nums)
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return new List<IList<int>>();
+                Array.Sort(nums);
+                IList<IList<int>> result = new List<IList<int>>();
+
+                for (int i = 0; i < nums.Length - 2; i++)
+                {
+                    // Skip duplicate values
+                    if (i > 0 && nums[i] == nums[i - 1]) continue;
+
+                    int left = i + 1, right = nums.Length - 1;
+                    while (left < right)
+                    {
+                        int sum = nums[i] + nums[left] + nums[right];
+
+                        if (sum == 0)
+                        {
+                            result.Add(new List<int> { nums[i], nums[left], nums[right] });
+
+                            // Skip duplicates for 'left'
+                            while (left < right && nums[left] == nums[left + 1]) left++;
+                            // Skip duplicates for 'right'
+                            while (left < right && nums[right] == nums[right - 1]) right--;
+
+                            left++;
+                            right--;
+                        }
+                        else if (sum < 0)
+                        {
+                            left++; // here we Need a Larg number
+                        }
+                        else
+                        {
+                            right--; // Need a small number
+                        }
+                    }
+                }
+
+                return result;
             }
             catch (Exception)
             {
@@ -220,8 +300,35 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                // Initialize a variable to keep track of the longest streak of 1s found so far.
+                int maxStreak = 0;
+                // Initialize a variable to keep track of the current streak of 1s being counted.
+                int currentStreak = 0;
+
+                // Loop through each number in the provided array.
+                foreach (int num in nums)
+                {
+                    // Check if the current number is 1.
+                    if (num == 1)
+                    {
+                        // If it is, increment the count of the current streak of 1s.
+                        currentStreak++;
+                        // Check if the current streak is longer than the longest streak found so far.
+                        if (maxStreak < currentStreak)
+                        {
+                            // If so, update the longest streak with the length of the current streak.
+                            maxStreak = currentStreak;
+                        }
+                    }
+                    else
+                    {
+                        // If the current number is not 1, reset the current streak count to 0.
+                        currentStreak = 0;
+                    }
+                }
+
+                // Here we Return the longest streak of consecutive 1s found in the array.
+                return maxStreak;
             }
             catch (Exception)
             {
@@ -256,8 +363,27 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                // Initialize a variable to keep track of the decimal value.
+                int decimalValue = 0;
+                // Initialize a base value that will be used to convert binary to decimal.
+                int baseValue = 1;
+
+                int temp = binary;
+                while (temp > 0)
+                {
+                    // Extract the last digit (either 0 or 1) of the binary number.
+                    int lastDigit = temp % 10;
+                    // Convert the last binary digit to decimal and add it to the total decimalValue.
+                    decimalValue += lastDigit * baseValue;
+
+                    // Move one digit over in the binary number.
+                    temp = temp / 10;
+                    // Increase the base value (powers of 2).
+                    baseValue = baseValue * 2;
+                }
+
+                // Return the calculated decimal value.
+                return decimalValue;
             }
             catch (Exception)
             {
@@ -290,15 +416,60 @@ namespace ISM6225_Spring_2024_Assignment_2
 
         */
 
+
         public static int MaximumGap(int[] nums)
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                // Check if the input array is too small to have a gap. If so, return 0.
+                if (nums.Length < 2) return 0;
+
+                // Initialize variables to track the minimum and maximum values in the array.
+                int minVal = int.MaxValue, maxVal = int.MinValue;
+                // Iterate through the array to find the minimum and maximum values.
+                foreach (int num in nums)
+                {
+                    minVal = Math.Min(minVal, num);
+                    maxVal = Math.Max(maxVal, num);
+                }
+
+                // Calculate the size of each bucket. The goal is to minimize the maximum gap.
+                int bucketSize = Math.Max(1, (maxVal - minVal) / (nums.Length - 1));
+                // Calculate the number of buckets needed based on the range of values and the bucket size.
+                int bucketCount = (maxVal - minVal) / bucketSize + 1;
+                // Create arrays to track the minimum and maximum values in each bucket. Initialize as null.
+                int?[] bucketMin = new int?[bucketCount];
+                int?[] bucketMax = new int?[bucketCount];
+
+                // Distribute the numbers into buckets based on their value.
+                foreach (int num in nums)
+                {
+                    // Calculate the index of the bucket this number belongs to.
+                    int idx = (num - minVal) / bucketSize;
+                    // Update the bucket's minimum and maximum values with the current number if applicable.
+                    if (!bucketMin[idx].HasValue || num < bucketMin[idx]) bucketMin[idx] = num;
+                    if (!bucketMax[idx].HasValue || num > bucketMax[idx]) bucketMax[idx] = num;
+                }
+
+                // Initialize variables to track the maximum gap and the maximum value of the previous bucket.
+                int maxGap = 0, prevBucketMax = minVal;
+                // Iterate through each bucket to find the maximum gap between consecutive buckets.
+                for (int i = 0; i < bucketCount; i++)
+                {
+                    // Skip empty buckets.
+                    if (!bucketMin[i].HasValue) continue;
+                    // The gap is the difference between the current bucket's minimum and the previous bucket's maximum.
+                    maxGap = Math.Max(maxGap, bucketMin[i].Value - prevBucketMax);
+                    // Update prevBucketMax to the current bucket's maximum value for the next iteration.
+                    prevBucketMax = bucketMax[i].Value;
+                }
+
+                // Return the maximum gap found between consecutive buckets.
+                return maxGap;
             }
             catch (Exception)
             {
+
                 throw;
             }
         }
@@ -330,11 +501,29 @@ namespace ISM6225_Spring_2024_Assignment_2
 
         */
 
+
+
         public static int LargestPerimeter(int[] nums)
         {
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
+                // Here we need to Sort the array in non-ascending order
+                Array.Sort(nums);
+                Array.Reverse(nums);
+
+                // Iterate through the array to find the largest perimeter
+                for (int i = 0; i < nums.Length - 2; i++)
+                {
+                    // Check if  three numbers can form a triangle
+                    if (nums[i] < nums[i + 1] + nums[i + 2])
+                    {
+                        // If it is possible, return their sum as the largest perimeter
+                        return nums[i] + nums[i + 1] + nums[i + 2];
+                    }
+                }
+
+                // If not possible such set exists, return 0
                 return 0;
             }
             catch (Exception)
@@ -342,6 +531,7 @@ namespace ISM6225_Spring_2024_Assignment_2
                 throw;
             }
         }
+
 
         /*
 
@@ -388,8 +578,19 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return "";
+                // Continuously loop as long as 's' contains 'part'
+                while (s.Contains(part))
+                {
+                    // Find the index of leftmost occurrence of 'part' in 's'
+                    int index = s.IndexOf(part);
+                    // If 'part' is found, remove it from 's'
+                    if (index != -1)
+                    {
+                        s = s.Remove(index, part.Length);
+                    }
+                }
+                // Return the modified string after removing all occurrences of 'part'
+                return s;
             }
             catch (Exception)
             {
@@ -429,7 +630,8 @@ namespace ISM6225_Spring_2024_Assignment_2
 
             for (int i = 0; i < input.Count; i++)
             {
-                strArray[i] = "" + input[i] + ""; // Enclose each string in double quotes
+                strArray[i] = "" + input[i] + "";
+                // Enclose each string in double quotes
             }
 
             // Join the strings in strArray with commas and enclose them in square brackets
